@@ -1,0 +1,4 @@
+GITHUB_USERNAME = XXXXXXX # Replace with your GitHub username
+GITHUB_TOKEN = XXXXXXX # Replace with your GitHub personal access token
+CLOUDFLARE_ACCOUNT_ID = XXXXXXX # Replace with your Cloudflare account ID
+CLOUDFLARE_API_TOKEN = XXXXXXX # Replace with your Cloudflare API token
