@@ -32,11 +32,19 @@ async function deployHonoWorker(projectName) {
     // Step 4: Create Worker Script
     console.log("Creating worker script...");
     const honoScript = `
-            import { Hono } from 'hono';
-            const app = new Hono();
-            app.get('/', (c) => c.text('Hello from ${projectName}!'));
-            export default app;
-        `;
+    import { Hono } from 'hono';
+    const app = new Hono();
+    app.get('/', (c) => c.text('Hello from ${projectName}!'));
+    app.get('/robots.txt', (c) => {
+      const robotsTxt = \`
+    User-agent: *
+    Disallow: /\`;
+      return c.text(robotsTxt.trim(), 200, {
+        'Content-Type': 'text/plain',
+      });
+    });
+    export default app;
+    `;
     fs.writeFileSync(path.join(projectDir, "index.js"), honoScript);
 
     // Step 5: Create Wrangler.toml manually
@@ -87,11 +95,9 @@ workers_dev = true
     // Step 9: Deploy to Cloudflare
     console.log("Deploying to Cloudflare...");
     process.env.CLOUDFLARE_API_TOKEN = CLOUDFLARE_API_TOKEN;
-    await exec("wrangler publish", { cwd: projectDir });
+    await exec("wrangler deploy", { cwd: projectDir });
 
-    console.log(
-      `Hono Cloudflare Worker "${projectName}" deployed successfully!`
-    );
+    console.log(`Hono Cloudflare Worker ${projectName} deployed successfully!`);
   } catch (error) {
     console.error("Error during deployment:", error);
   }
